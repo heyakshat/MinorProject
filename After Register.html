@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', 'Arial', sans-serif;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      padding: 20px;
+      animation: fadeIn 1s ease-in-out;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      animation: slideInFromTop 0.8s ease-in-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #28a745, #007bff, #ffc107);
+      animation: rainbow 8s linear infinite;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 10px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .header h1::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, #28a745, #007bff);
+      border-radius: 3px;
+    }
+
+    .form-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .form-section {
+      flex: 1;
+      min-width: 300px;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-section h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #444;
+      position: relative;
+      padding-bottom: 8px;
+    }
+
+    .form-section h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background: #007bff;
+    }
+
+    .form-section input,
+    .form-section select {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 12px 0;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      transition: all 0.3s ease-in-out;
+      font-size: 15px;
+    }
+
+    .form-section input:focus,
+    .form-section select:focus {
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+      border-color: #007bff;
+      outline: none;
+      transform: scale(1.01);
+    }
+
+    .important-note {
+      background: linear-gradient(135deg, #fff9c4 0%, #fff176 100%);
+      border-left: 4px solid #ffd600;
+      border-radius: 6px;
+      padding: 20px;
+      margin: 20px 0;
+      animation: pulse 1.5s infinite, bounceIn 0.8s;
+      position: relative;
+    }
+
+    .important-note::before {
+      content: '!';
+      position: absolute;
+      top: -15px;
+      left: -15px;
+      width: 30px;
+      height: 30px;
+      background: #ff5722;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 18px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .important-note strong {
+      display: block;
+      margin-bottom: 10px;
+      color: #d32f2f;
+      font-size: 18px;
+    }
+
+    .upload-section {
+      text-align: center;
+      border: 2px dashed #aaa;
+      border-radius: 10px;
+      padding: 30px;
+      background: #f9f9f9;
+      transition: all 0.3s ease-in-out;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .upload-section:hover {
+      background-color: #f0f4ff;
+      border-color: #007bff;
+      transform: translateY(-3px);
+    }
+
+    .upload-section.drag-over {
+      background-color: #e3f2fd;
+      border-color: #2196f3;
+      animation: pulse 0.5s;
+    }
+
+    .upload-section input {
+      display: none;
+    }
+
+    .upload-section label {
+      display: inline-block;
+      padding: 12px 25px;
+      background: linear-gradient(135deg, #007bff 0%, #00b4db 100%);
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      font-weight: 500;
+      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+      margin-bottom: 15px;
+    }
+
+    .upload-section label:hover {
+      background: linear-gradient(135deg, #0069d9 0%, #0095cd 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+    }
+
+    .upload-icon {
+      font-size: 50px;
+      color: #007bff;
+      margin-bottom: 15px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .file-details {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f1f8e9;
+      border-radius: 6px;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+
+    .file-details p {
+      margin: 5px 0;
+    }
+
+    .file-details p:first-child {
+      font-weight: 600;
+      color: #2e7d32;
+    }
+
+    button {
+      background: linear-gradient(135deg, #28a745 0%, #5cb85c 100%);
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+      display: block;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #218838 0%, #4cae4c 100%);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    button::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: rgba(255, 255, 255, 0.2);
+      transform: rotate(45deg);
+      transition: all 0.5s ease;
+    }
+
+    button:hover::after {
+      left: 100%;
+    }
+
+    footer {
+      margin-top: 40px;
+      padding: 30px 20px;
+      background-color: #fff;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      border-radius: 10px;
+      flex-wrap: wrap;
+      gap: 20px;
+      animation: fadeInUp 1s;
+    }
+
+    footer .section {
+      flex: 1;
+      min-width: 200px;
+      text-align: left;
+      padding: 0 15px;
+    }
+
+    footer .section h3 {
+      margin-bottom: 15px;
+      font-size: 18px;
+      color: #333;
+      position: relative;
+      padding-bottom: 8px;
+    }
+
+    footer .section h3::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 30px;
+      height: 2px;
+      background: #007bff;
+    }
+
+    footer .section a {
+      color: #555;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+      padding: 5px 0;
+      position: relative;
+      padding-left: 15px;
+    }
+
+    footer .section a::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: #007bff;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    footer .section a:hover {
+      color: #007bff;
+      transform: translateX(5px);
+    }
+
+    footer .section a:hover::before {
+      opacity: 1;
+      left: 5px;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideInFromTop {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 10px rgba(255, 217, 102, 0.5);
+      }
+      50% {
+        box-shadow: 0 0 20px rgba(255, 217, 102, 0.8);
+      }
+    }
+
+    @keyframes rainbow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes bounceIn {
+      0% {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      60% {
+        transform: scale(1.05);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .form-container {
+        flex-direction: column;
+      }
+      
+      .header h1 {
+        font-size: 26px;
+      }
+      
+      button {
+        padding: 10px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 class="animate_animated animate_fadeInDown">Welcome Mamta Sharma</h1>
+      <p class="animate_animated animatefadeIn animate_delay-1s">Complete your profile to get started</p>
+    </div>
+
+    <div class="form-container">
+      <div class="form-section animate_animated animate_fadeInLeft">
+        <h2>Personal Information</h2>
+        <input type="text" placeholder="Name: Mamta Sharma" disabled>
+        <input type="email" placeholder="Email ID: MamtaSharma@NariDhan.org" disabled>
+        <input type="text" placeholder="Phone Number: XXXXXX001">
+        <select>
+          <option>Education Level: Secondary School</option>
+        </select>
+        <input type="text" placeholder="Occupation: Housewife">
+        <input type="text" placeholder="Date of Birth: 01-01-1967">
+        <input type="text" placeholder="Address: Vasant Vihar, New Delhi, India">
+        <input type="text" placeholder="City: Delhi">
+        <select>
+          <option>State Option: Delhi</option>
+        </select>
+        <select>
+          <option>Country Option: India</option>
+        </select>
+      </div>
+
+      <div class="form-section animate_animated animatefadeIn animate_delay-1s">
+        <h2>Identity Details</h2>
+        <input type="text" placeholder="Aadhar Card No: XXXXXX78">
+        <input type="text" placeholder="Pan Card No (Optional): ABCXXXXX">
+        <input type="text" placeholder="Alternative Mobile No: 123XXXXXXX">
+
+        <div class="important-note">
+          <strong>Important Note !!!</strong>
+          <p>Kindly Upload Your Aadhar Card, Pan Card Before Confirming Details</p>
+        </div>
+        <button id="confirm-btn" class="animate_animated animatepulse animateinfinite animate_slower">Confirm Details</button>
+      </div>
+
+      <div class="form-section upload-section animate_animated animate_fadeInRight">
+        <div class="upload-icon">📁</div>
+        <label for="file-upload">Choose a file or drag & drop it here</label>
+        <input type="file" id="file-upload" accept="image/*,.pdf,.mp4">
+        <div class="file-details" id="file-details">
+          <p>No file uploaded yet.</p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="animate_animated animatefadeInUp animate_delay-1s">
+      <div class="section services">
+        <h3>Services</h3>
+        <a href="investment tools.html">Investments</a>
+        <a href="financial edu.html">Education</a>
+      </div>
+      <div class="section updates">
+        <h3>Latest Updates</h3>
+        <a href="https://cmladlibahna.mp.gov.in/">MP Government Schemes</a>
+        <a href="https://mksy.up.gov.in/">UP Government Schemes</a>
+      </div>
+      <div class="section resources">
+        <h3>Resources</h3>
+        <a href="Ai chat bot.html">AI Powered Learning Material</a>
+        <a href="Mentorship.html">Mentorship</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('file-upload');
+    const fileDetails = document.getElementById('file-details');
+    const confirmBtn = document.getElementById('confirm-btn');
+    const uploadSection = document.querySelector('.upload-section');
+
+    // File upload handling
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+      if (file) {
+        fileDetails.innerHTML = `<p><strong>${file.name}</strong></p>
+                               <p>${(file.size / 1024 / 1024).toFixed(2)} MB &#10004; Uploaded</p>`;
+        fileDetails.style.background = '#e8f5e9';
+        fileDetails.classList.add('animate_animated', 'animate_bounceIn');
+        
+        // Remove animation class after it completes
+        setTimeout(() => {
+          fileDetails.classList.remove('animate_animated', 'animate_bounceIn');
+        }, 1000);
+      } else {
+        fileDetails.innerHTML = '<p>No file uploaded yet.</p>';
+        fileDetails.style.background = '#f1f8e9';
+      }
+    });
+
+    // Drag and drop effects
+    uploadSection.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadSection.classList.add('drag-over');
+    });
+
+    ['dragleave', 'dragend'].forEach(type => {
+      uploadSection.addEventListener(type, () => {
+        uploadSection.classList.remove('drag-over');
+      });
+    });
+
+    uploadSection.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadSection.classList.remove('drag-over');
+      fileInput.files = e.dataTransfer.files;
+      const event = new Event('change');
+      fileInput.dispatchEvent(event);
+    });
+
+    // Confirm button animation
+    confirmBtn.addEventListener('click', () => {
+      confirmBtn.classList.add('animate_animated', 'animate_rubberBand');
+      
+      setTimeout(() => {
+        window.location.href = 'Financial Hub.html';
+      }, 1000);
+    });
+
+    // Hover effect for form sections
+    document.querySelectorAll('.form-section').forEach(section => {
+      section.addEventListener('mouseenter', () => {
+        section.classList.add('animate_animated', 'animate_pulse');
+      });
+      
+      section.addEventListener('mouseleave', () => {
+        section.classList.remove('animate_animated', 'animate_pulse');
+      });
+    });
+  </script>
+</body>
+</html>
